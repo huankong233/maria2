@@ -1,33 +1,14 @@
 import {
-  type Socket,
   type ReadyState,
+  type Socket,
   OpenOptions,
   PreconfiguredSocket,
 } from '../conn.ts'
 import { isNodeEnv } from '../shared.ts'
 
-const createPost = await (async () => {
-  if (fetch != null) {
-    const headers = new Headers([['content-type', 'application/json']])
+import { httpPost } from '../shims/node.ts'
 
-    return (url: string, json: string) =>
-      new Promise<string>((onResolve, onReject) => {
-        globalThis
-          .fetch(url, {
-            method: 'POST',
-            body: json,
-            headers,
-          })
-          .then((r) => r.text().then(onResolve, onReject), onReject)
-      })
-  } else if (isNodeEnv) {
-    return (await import('../shims/node.ts')).httpPost
-  } else {
-    return () => {
-      throw new Error('[maria2 error] HTTP client implementation is missing')
-    }
-  }
-})()
+export const createPost = httpPost
 
 export interface CreateHTTP {
   (url: Aria2RpcHTTPUrl): Socket

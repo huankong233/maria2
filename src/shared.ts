@@ -15,43 +15,7 @@ export const once = <T extends unknown[], R>(
     triggered ? ret : ((triggered = true), (ret = fn(...args)))
 }
 
-// @ts-ignore
-export const randomUUID = await (async () => {
-  if (globalThis?.crypto?.randomUUID != null) {
-    return () => globalThis.crypto.randomUUID()
-  } else {
-    if (isNodeEnv) {
-      const nodeUUID = (await import('./shims/node.ts')).randomUUID
-      if (nodeUUID != null) return nodeUUID
-    }
-
-    if (typeof Math.random == 'function') {
-      if (isDev) {
-        console.warn(
-          '[maria2 warn] Not found `crypto.randomUUID()` in this environment; ' +
-            'switching to fallback (Math.random)'
-        )
-      }
-
-      return () =>
-        [Math.random(), Math.random(), Math.random()]
-          .map((v) => v.toString(16).slice(2))
-          .join('')
-          .slice(0, 32)
-          .padStart(32, '0')
-    }
-
-    if (isDev) {
-      console.warn(
-        '[maria2 warn] Not found `crypto.randomUUID()` in this environment; ' +
-          'switching to fallback (unsafe counting)'
-      )
-    }
-
-    let count = 0
-    return () => (count += 1).toString()
-  }
-})()
+export { randomUUID } from 'node:crypto'
 
 export const sleep = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms))
