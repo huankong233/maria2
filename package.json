@@ -1,5 +1,5 @@
 {
-  "name": "maria2",
+  "name": "@huan_kong/maria2",
   "version": "0.3.4",
   "description": "Simple RPC Library for aria2",
   "type": "module",
